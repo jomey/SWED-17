@@ -53,6 +53,9 @@ CREATE EXTENSION postgis;
 CREATE EXTENSION postgis_raster;
 ```
 
+## Reads
+https://wiki.postgresql.org/wiki/Don't_Do_This
+
 # Data management
 ## Sample import of NetCDF
 Options from:
