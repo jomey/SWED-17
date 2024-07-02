@@ -3,30 +3,33 @@
 conda env create -n postgresql postgis
 ```
 
-
 # Setup
 ## Create new cluster
+Flags:
+* (g) Allow user group acces
+* (E) Set server and template encoding to UTF-8
+* (U) Use a 'neutral' root user name
 ```shell
-initdb -D /path/to/db_home
+initdb -g -E utf8 -U oper -D /path/to/db_home
 ```
 
-## (Optional) Allow connections from outside
-* Edit `postgresql.conf`
+## Server config
+Edit file `postgresql.conf` inside the DB home directory
+
+### Allow connections from outside
 ```
 listen_addresses = '*'
 ```
-* Edit `pg_hba.conf` and add allowed IP address
-
-## Server config
-Edit: `postgresql.conf`
 
 ### Activate all GDAL drivers
+Add new section at the bottom of the file
 ```
 postgis.gdal_enabled_drivers = 'ENABLE_ALL'
 postgis.enable_outdb_raster = 1
 ```
 
-Verify after server start with a SQL console:
+#### Verify
+After server start with a SQL console:
 ```sql
 SELECT short_name, long_name, can_write
 FROM st_gdaldrivers()
@@ -39,6 +42,9 @@ timezone = 'UTC'
 datestyle = 'iso, ymd'
 ```
 
+### To allow connections outside of 'localhost'
+Edit `pg_hba.conf` and add allowed IP address
+
 ## After starting the server
 ### Activate postgis and raster extensions on new DB
 In a SQL console
@@ -46,7 +52,6 @@ In a SQL console
 CREATE EXTENSION postgis;
 CREATE EXTENSION postgis_raster;
 ```
-
 
 # Data management
 ## Sample import of NetCDF
@@ -64,7 +69,6 @@ https://postgis.net/docs/using_postgis_dbmanagement.html#shp2pgsql_usage
 ```shell
 shp2pgsql -c -s 4269 -i -I CBRFC_Zones_UC.shp CBRFC_Zones_UC | psql -h honduras -d swannData
 ```
-
 
 # Reads
 https://www.crunchydata.com/blog/postgres-raster-query-basics
