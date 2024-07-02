@@ -6,6 +6,8 @@ from psycopg import Cursor
 from psycopg.rows import TupleRow, class_row
 from rasterio.io import MemoryFile
 
+from swed_17.db_tables.cbrfc_zone import CBRFCZone
+
 
 class ZoneDB:
     """
@@ -78,3 +80,24 @@ class ZoneDB:
         ) as db_result:
             result = db_result.fetchone()
         return MemoryFile(bytes(result[0]))
+
+    def zone_in_ch5_id(self, ch5_ids: list) -> list[str]:
+        """
+        Return list of zone names for given CH5 IDs
+
+        Parameters
+        ----------
+        ch5_ids : list
+            CH5 IDs
+
+        Returns
+        -------
+        Row
+            List with zone names
+        """
+        with self.query(
+            CBRFCZone.ZONES_IN_CH5ID,
+            [ch5_ids],
+            row_factory=class_row(CBRFCZone)
+        ) as db_result:
+            return db_result.fetchall()
