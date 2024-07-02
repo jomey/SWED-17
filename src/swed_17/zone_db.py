@@ -1,14 +1,21 @@
 import psycopg
 
-from psycopg.rows import Row
+from contextlib import contextmanager
+
+from psycopg import Cursor
+from psycopg.rows import TupleRow, class_row
 from rasterio.io import MemoryFile
 
 
 class ZoneDB:
     """
-Database query class.
+    Database query class.
     """
     COORDS_CONVERSION = {'x': 'lon', 'y': 'lat'}
+
+    CONNECTION_OPTIONS = dict(
+        autocommit=True,
+    )
 
     class Query:
         """
@@ -19,13 +26,14 @@ Database query class.
 
     def __init__(self, connection_info: str):
         self._connection_info = connection_info
-        self.connection = psycopg.connect(
-            connection_info, autocommit=True
-        )
 
-    def query(self, query: str, params: dict = {}) -> Row:
+    @contextmanager
+    def query(self, query: str, params: dict = {}, row_factory={}) -> Cursor[TupleRow]:
         """
-        Execute given query by passing in requested parameters
+        Execute given query by passing in requested parameters.
+
+        This uses a conextmanager to manage the DB connection and to yield
+        the results as DB cursor.
 
         Parameters
         ----------
@@ -33,18 +41,23 @@ Database query class.
             SQL query
         params : dict, optional
             Pass in query parameters if the query contains any, by default {}
+        row_factory: dict, optional
+            Specify the class to use to parse each result row
 
         Returns
         -------
-        Row
-            Query result as psycopg row.
+        Cursor
+            Cursor with result from psycopg execute().
         """
-        # TODO: Figure out a good way to close and open connections
-        #       Keeping this open for now which can be problematic with man
-        #       class instances at once.
-        with self.connection.cursor() as curs:
-            curs.execute(query, params)
-            return curs.fetchone()
+        with psycopg.connect(
+            self._connection_info, **self.CONNECTION_OPTIONS
+        ) as connection:
+            with connection.cursor() as cursor:
+                if row_factory:
+                    cursor.row_factory = row_factory
+
+                cursor.execute(query, params)
+                yield cursor
 
     def zone_as_rio(self, zone_name: str) -> MemoryFile:
         """
@@ -60,7 +73,8 @@ Database query class.
         MemoryFile
             Result of query as rasterio MemoryFile
         """
-        result = self.query(
+        with self.query(
             self.Query.ZONE_AS_RASTER, {'zone_name': zone_name}
-        )
+        ) as db_result:
+            result = db_result.fetchone()
         return MemoryFile(bytes(result[0]))
