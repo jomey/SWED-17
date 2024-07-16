@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-class Snow17SWE:
+class SweCsv:
     """
     Parse CSV file into a pandas data frame.
 
