@@ -14,7 +14,9 @@ dependencies:
 - netcdf4
 - psycopg
 - rasterio
+- sqlalchemy
 - xarray
 - pip:
   - ibm_db_dbi
+  - ibm_db_sa
 
