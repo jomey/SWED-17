@@ -1,5 +1,7 @@
-from .swe_csv import SweCsv
+from .swe_df import Swe
+from .swe_db import SweDB
 
 __all__ = [
-    "SweCsv",
+    "Swe",
+    "SweDB",
 ]
