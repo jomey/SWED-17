@@ -4,7 +4,7 @@ import xarray as xr
 
 from swed_17.nb_helpers import start_cluster
 from swed_17 import ZoneCompare, ZoneDB, ZonePlotter
-from swed_17 import snow17
+from swed_17.snow17 import Swe, SweDB
 from swed_17.peak_swe import peak_swe_for_pd, plot_peak_swe_pd, compare_peak_swe
 from swed_17.swann_helpers import swann_data_for_zone, swann_swe_for_zone, peak_swe_for_swann
 
