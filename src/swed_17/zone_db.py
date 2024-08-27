@@ -81,7 +81,7 @@ class ZoneDB:
             result = db_result.fetchone()
         return MemoryFile(bytes(result[0]))
 
-    def zone_in_ch5_id(self, ch5_ids: list) -> list[str]:
+    def zone_in_ch5_ids(self, ch5_ids: list) -> list[str]:
         """
         Return list of zone names for given CH5 IDs
 
@@ -101,3 +101,19 @@ class ZoneDB:
             row_factory=class_row(CBRFCZone)
         ) as db_result:
             return db_result.fetchall()
+
+    def zone_in_ch5_id(self, ch5_id: str) -> list[str]:
+        """
+        Return list of zone name for given CH5 ID
+
+        Parameters
+        ----------
+        ch5_id : str
+            CH5 ID
+
+        Returns
+        -------
+        list[str]
+            List with zone name
+        """
+        return self.zone_in_ch5_ids([ch5_id])
