@@ -1,4 +1,5 @@
 import psycopg
+import pandas as pd
 
 from contextlib import contextmanager
 
@@ -15,6 +16,8 @@ class ZoneDB:
     CONNECTION_OPTIONS = dict(
         autocommit=True,
     )
+
+    PSYCOPG_PROTOCOL = "postgresql+psycopg://"
 
     class Query:
         """
@@ -58,3 +61,29 @@ class ZoneDB:
                 cursor.execute(query, params)
                 yield cursor
 
+    def write(self, dataframe: pd.DataFrame, table_name: str) -> None:
+        """
+        Write datafrme to the database
+
+        Parameters
+        ----------
+        dataframe : pd.DataFrame
+            Dataframe with the data. The column names have to match the table
+            columns
+        table_name : str
+            Table name to write to
+        """
+
+        engine = create_engine(self.pd_connection_info())
+        with engine.connect() as connection:
+            dataframe.to_sql(table_name, con=connection, if_exists='append')
+
+    def pd_connection_info(self):
+        """
+        Return the connection info for use with pandas.
+
+        Pandas needs an explicit defintion in the string to indicate psycopg
+        use.
+        """
+        connection_info = self._connection_info.split('://')
+        return self.PSYCOPG_PROTOCOL + connection_info[1]
