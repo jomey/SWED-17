@@ -29,18 +29,10 @@ os.environ['PROJ_DATA'] = '/perc10/data/miniconda3/envs/snow_viz/share/proj'
 
 # Create a nb_paths.py file that holds all directory infos
 # This is not commited with the repository
-# List of needed variables:
-# CBRFC zones
-#  * ZONE_DIR
-#  * GSL_ZONES
-#  * UC_ZONES
-#  * LC_ZONES
-# CBRFC zones as tif
-#  * ZONE_TIF_DIR
-#  * GSL_ZONE_TIF
-#  * UC_ZONE_TIF
-#  * LC_ZONE_TIF
-# SWE files
-#  * SWE_HOME_DIR
+# DB connection infos
+#  * DB_CONNECTION_INFO (with CBRFC shapefiles and third-party SWE grids)
+#  * SNOW_17_DB_CONNECTION
 # SWANN files
 #  * SWANN_HOME_DIR
+# Output directories
+#  * HTML_OUTPUT
