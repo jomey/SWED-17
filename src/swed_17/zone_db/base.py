@@ -8,7 +8,7 @@ from psycopg.rows import TupleRow
 from sqlalchemy import create_engine
 
 
-class ZoneDB:
+class Base:
     """
     Base database query class.
     """

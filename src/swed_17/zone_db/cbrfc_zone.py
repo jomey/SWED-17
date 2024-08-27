@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from psycopg.rows import class_row
 from rasterio.io import MemoryFile
 
-from swed_17 import ZoneDB
+from .base import Base
 
 
 @dataclass
@@ -14,12 +14,12 @@ class CBRFCZoneRow:
     description: str
 
 
-class CBRFCZone(ZoneDB):
+class CBRFCZone(Base):
     ZONES_IN_CH5ID = "SELECT cz.gid, cz.ch5_id, cz.zone, cz.description " \
                      "FROM cbrfc_zones CZ " \
                      "WHERE CH5_ID = ANY(%s)"
 
-    def zone_as_rio(self, zone_name: str) -> MemoryFile:
+    def as_rio(self, zone_name: str) -> MemoryFile:
         """
         Query for a zone mask and return as a rasterio MemoryFile.
 

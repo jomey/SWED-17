@@ -4,7 +4,7 @@ import xarray as xr
 
 from .peak_swe import peak_swe_for_pd
 from .rasterize_zone import cbrfc_zone_mask_as_xr
-from .zone_db import ZoneDB
+from .zone_db import CBRFCZone
 from .zone_raster import ZoneRaster
 
 
@@ -96,7 +96,7 @@ def swann_swe_for_zones(
 
 
 def swann_data_for_zone(
-        swann_files: xr.Dataset, zone_name: str, zone_db: ZoneDB
+        swann_files: xr.Dataset, zone_name: str, zone_db: CBRFCZone
 ) -> xr.DataArray:
     """
     Retrieve the data for requested zone from given SWANN files and calculate
@@ -111,7 +111,7 @@ def swann_data_for_zone(
         Xarray Dataset with all SWE files to extract data from
     zone_name : str
         CBRFC zone to get data for
-    zone_db : ZoneDB
+    zone_db : CBRFCZone
         Instance that holds the database connection
 
     Returns
@@ -119,7 +119,7 @@ def swann_data_for_zone(
     xr.DataArray
         Results as xarray DataArray.
     """
-    zone_mask = zone_db.zone_as_rio(zone_name)
+    zone_mask = zone_db.as_rio(zone_name)
     swann_xr = swann_files.sel(
         ZoneRaster.bounding_box(zone_mask)
     )
@@ -133,7 +133,7 @@ def swann_data_for_zone(
 
 
 def swann_swe_for_zone(
-        swann_xr: xr.Dataset, zone_name: str, zone_db: ZoneDB
+        swann_xr: xr.Dataset, zone_name: str, zone_db: CBRFCZone
 ) -> pd.DataFrame:
     """Get SWE data from SWANN xarray dataset and return as dataframe.
 
@@ -166,7 +166,7 @@ def swann_swe_for_zone(
 
 
 def peak_swe_for_swann(
-        swann_xr: xr.Dataset, target_zones: list, zone_db: ZoneDB
+        swann_xr: xr.Dataset, target_zones: list, zone_db: CBRFCZone
 ) -> dict:
     """Generate peak SWE date time series for given zone
 
@@ -176,7 +176,7 @@ def peak_swe_for_swann(
         Dataset containing all files with SWE data
     target_zones : list
         List of zones to extract from SWE data
-    zone_db : ZoneDB
+    zone_db : CBRFCZone
         Connection object to the database
 
     Returns
