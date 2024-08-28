@@ -76,33 +76,3 @@ def swann_swe_for_zone(
     zone_df.index = zone_df.index.round('D')
 
     return zone_df
-
-
-def peak_swe_for_swann(
-        swann_xr: xr.Dataset, target_zones: list, zone_db: CBRFCZone
-) -> dict:
-    """Generate peak SWE date time series for given zone
-
-    Parameters
-    ----------
-    swann_xr : xr.Dataset
-        Dataset containing all files with SWE data
-    target_zones : list
-        List of zones to extract from SWE data
-    zone_db : CBRFCZone
-        Connection object to the database
-
-    Returns
-    -------
-    dict
-        Dictionary with keys as zone names and values with the data.
-    """
-    swann_swe = {
-        zone_name: swann_swe_for_zone(swann_xr, zone_name, zone_db)
-        for zone_name in target_zones
-    }
-
-    return {
-        zone_name: peak_swe_for_pd(swann_swe[zone_name])
-        for zone_name in target_zones
-    }
