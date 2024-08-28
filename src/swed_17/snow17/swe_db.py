@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine, text
 import pandas as pd
 
+from .s17_zonal_swe import S17ZonalSWE
+
 
 class SweDB:
     """
@@ -45,9 +47,9 @@ class SweDB:
 
         return result
 
-    def zone_data(self, segid: str, opid: str = None) -> pd.DataFrame:
+    def for_zone(self, segid: str, opid: str = None) -> pd.DataFrame:
         """
-        Get calibrated zone data
+        Get calibrated SWE zone data
 
         Parameters
         ----------
@@ -58,7 +60,7 @@ class SweDB:
 
         Returns
         -------
-        pd.DataFrame       
+        pd.DataFrame
             Zone data for all available years.
         """
         # The '_C' suffix indicates calibrated segment records
@@ -71,6 +73,8 @@ class SweDB:
             query = query + " AND opid = :opid"
             query_args['opid'] = opid
 
-        data = self.query(query, **query_args)
+        data = S17ZonalSWE.as_df(
+            self.query(query, **query_args)
+        )
 
         return data
