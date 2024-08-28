@@ -12,7 +12,7 @@ from bokeh.models import DatetimeTickFormatter, HoverTool
 
 def peak_swe_for_zone(
         swe_data: pd.DataFrame,
-        zone: str,
+        column: str,
         year_range: range,
         modify_date: bool = True
 ) -> list:
@@ -27,8 +27,8 @@ def peak_swe_for_zone(
     ----------
     swe_data : pd.DataFrame
         Data to search through
-    zone : str
-        CBRFC zone name
+    column : str
+        Name of the column holding the SWE data
     year_range : range
         Year range to get dates for
     modify_date : bool
@@ -41,7 +41,7 @@ def peak_swe_for_zone(
         Peak SWE dates for each year.
     """
     peaks = [
-        swe_data[zone].loc[f"{year - 1}-10-01":f"{year}-09-30"].idxmax()
+        swe_data[column].loc[f"{year - 1}-10-01":f"{year}-09-30"].idxmax()
         for year in year_range
     ]
 
