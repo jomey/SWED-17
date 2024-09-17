@@ -1,3 +1,4 @@
+-- UA SWE views
 DO $$
 DECLARE
     cbrfc_zone record;
