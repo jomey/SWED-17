@@ -16,3 +16,10 @@ BEGIN
     END LOOP;
 END; 
 $$
+
+-- CU Boulder SWE views
+CREATE OR REPLACE VIEW public.CUB_ALEC2HLF AS (
+    SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
+    FROM cu_swe_for_zone_and_date('ALEC2HLF', '2023-04-01') AS cu_swe
+    WHERE ST_WITHIN(cu_swe.raster_center, cu_swe.zone_geom)
+)
