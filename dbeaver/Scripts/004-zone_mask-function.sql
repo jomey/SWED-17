@@ -1,25 +1,25 @@
-CREATE OR REPLACE FUNCTION public.mask_for_zone(zone_name text)
- RETURNS TABLE(id integer, val double precision, geom geometry)
+-- Function to extract UA SWE raster centroids that fall within a CBRFC zone
+-- Uses the 4 km raster grid
+DROP FUNCTION public.ua_4k_mask_for_zone;
+CREATE OR REPLACE FUNCTION public.ua_4k_mask_for_zone(zone_name text)
+ RETURNS TABLE(swe double precision, raster_center geometry)
  LANGUAGE sql
 AS $function$
     WITH cbrfc_zone AS (
-        select geom from cbrfc_zones czu where zone = zone_name
-    ),
-    zone_buffer AS (
-        SELECT st_buffer(st_envelope(cbrfc_zone.geom), 0.05) AS geom FROM cbrfc_zone
+        select geom, buffered_envelope from public.cbrfc_zone_buffer(zone_name)
     ),
     swann_pixels AS (
-        SELECT generate_series(0,1000) AS ID, 
-            (ST_PixelAsPolygons(
+        SELECT
+            (ST_PixelAsCentroids(
                 ST_CLIP(
                     ssm.rast,
-                    zone_buffer.geom
+                    cbrfc_zone.buffered_envelope
                 )
             )).*
-        FROM swann_swe_mask ssm, zone_buffer
+        FROM swann_swe_mask ssm, cbrfc_zone
     )
-    SELECT swann_pixels.id, swann_pixels.val, swann_pixels.geom
+    SELECT swann_pixels.val, swann_pixels.geom
     FROM cbrfc_zone, swann_pixels
-    WHERE ST_Intersects(swann_pixels.geom, cbrfc_zone.geom); 
+    WHERE ST_Within(swann_pixels.geom, cbrfc_zone.geom); 
 $function$
 ;

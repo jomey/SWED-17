@@ -17,8 +17,15 @@ BEGIN
 END; 
 $$
 
+-- UA SWE 4km views
+DROP VIEW public.UA_4k_ALEC2HMF;
+CREATE OR REPLACE VIEW public.UA_4k_ALEC2HLF AS (
+    SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
+    FROM ua_4k_mask_for_zone('ALEC2HLF') AS ua_swe
+);
+
 -- CU Boulder SWE views
 CREATE OR REPLACE VIEW public.CUB_ALEC2HLF AS (
     SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
     FROM cu_swe_for_zone_and_date('ALEC2HLF', '2023-04-01') AS cu_swe
-)
+);
