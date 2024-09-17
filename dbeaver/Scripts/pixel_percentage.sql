@@ -14,7 +14,7 @@ CREATE OR REPLACE VIEW public.UA_ALEC2HLF_PERC AS (
                 1,
                 FALSE
             )).*
-        FROM swann_swe_mask ssm, cbrfc_zone
+        FROM swann_swe_mask_4k ssm, cbrfc_zone
     )
     SELECT swann_pixels.val, swann_pixels.geom, 
         ST_Area(ST_Intersection(swann_pixels.geom, cbrfc_zone.geom))/ST_Area(swann_pixels.geom) AS overlap,

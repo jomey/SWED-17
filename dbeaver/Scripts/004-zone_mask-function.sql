@@ -16,7 +16,7 @@ AS $function$
                     cbrfc_zone.buffered_envelope
                 )
             )).*
-        FROM swann_swe_mask ssm, cbrfc_zone
+        FROM swann_swe_mask_4k ssm, cbrfc_zone
     )
     SELECT swann_pixels.val, swann_pixels.geom
     FROM cbrfc_zone, swann_pixels
