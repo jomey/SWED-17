@@ -10,4 +10,4 @@ raster2pgsql -I -C -M -F -R -Y -s 4269 -F -t 32x32 \
     psql -U oper -h mujeres -d swe_data
 
 # Add date column with index based on filenames
-psql -U oper -h mujeres -d swe_data -f 001-update_cu_boulder.sql
+psql -U oper -h mujeres -d swe_data -f 003-update_cu_boulder.sql
