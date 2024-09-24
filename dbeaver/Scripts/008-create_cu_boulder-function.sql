@@ -28,7 +28,7 @@ $function$
 -- Function to convert CU SWE into an areal mean value in mm
 DROP FUNCTION IF EXISTS public.cu_areal_swe_for_date;
 CREATE FUNCTION public.cu_areal_swe_for_date(zone_name TEXT, target_date TEXT)
-  RETURNS TABLE (swe double precision)
+  RETURNS TABLE (cub_swe double precision)
   LANGUAGE SQL
 AS $function$
   SELECT (avg(zone_data.swe) * 1000)
