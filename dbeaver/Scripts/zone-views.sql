@@ -41,3 +41,9 @@ CREATE OR REPLACE VIEW public.ASO_ALEC2HLF AS (
     SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
     FROM aso_swe_for_zone_and_date ('ALEC2HLF', '2023-04-01') AS cu_swe
 );
+
+-- UA 1km SWE view
+CREATE OR REPLACE VIEW public.UA_1KM_ALEC2HLF AS (
+    SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
+    FROM ua_1km_swe_for_zone_and_date ('ALEC2HLF', '2023-04-01') AS cu_swe
+);
