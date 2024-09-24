@@ -25,25 +25,25 @@ CREATE OR REPLACE VIEW public.UA_4k_ALEC2HLF AS (
 );
 
 -- CU Boulder SWE views
-CREATE OR REPLACE VIEW public.CUB_ALEC2HLF AS (
+CREATE OR REPLACE VIEW public.CUB_ALEC2HUF AS (
     SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
-    FROM cu_swe_for_zone_and_date('ALEC2HLF', '2023-04-01') AS cu_swe
+    FROM swe_from_product_for_zone_and_date('cu_boulder', 'ALEC2HUF', '2023-04-01') AS cu_swe
 );
 
 -- SNODAS SWE views
-CREATE OR REPLACE VIEW public.SNODAS_ALEC2HLF AS (
+CREATE OR REPLACE VIEW public.SNODAS_ALEC2HUF AS (
     SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
-    FROM snodas_swe_for_zone_and_date ('ALEC2HLF', '2023-04-01') AS cu_swe
+    FROM swe_from_product_for_zone_and_date ('snodas', 'ALEC2HUF', '2023-04-01') AS cu_swe
 );
 
 -- ASO SWE view
-CREATE OR REPLACE VIEW public.ASO_ALEC2HLF AS (
+CREATE OR REPLACE VIEW public.ASO_ALEC2HUF AS (
     SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
-    FROM aso_swe_for_zone_and_date ('ALEC2HLF', '2023-04-01') AS cu_swe
+    FROM swe_from_product_for_zone_and_date ('aso', 'ALEC2HUF', '2023-04-01') AS cu_swe
 );
 
 -- UA 1km SWE view
-CREATE OR REPLACE VIEW public.UA_1KM_ALEC2HLF AS (
+CREATE OR REPLACE VIEW public.UA_1KM_ALEC2HUF AS (
     SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
-    FROM ua_1km_swe_for_zone_and_date ('ALEC2HLF', '2023-04-01') AS cu_swe
+    FROM swe_from_product_for_zone_and_date ('ua_1km', 'ALEC2HUF', '2023-04-01') AS cu_swe
 );
