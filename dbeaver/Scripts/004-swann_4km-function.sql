@@ -13,10 +13,12 @@ AS $function$
             (ST_PixelAsCentroids(
                 ST_CLIP(
                     ssm.rast,
-                    cbrfc_zone.buffered_envelope
+                    cbrfc_zone.buffered_envelope,
+                    true
                 )
             )).*
         FROM swann_swe_mask_4k ssm, cbrfc_zone
+        WHERE ST_Intersects(ssm.rast, cbrfc_zone.buffered_envelope)
     )
     SELECT swann_pixels.val, swann_pixels.geom
     FROM cbrfc_zone, swann_pixels

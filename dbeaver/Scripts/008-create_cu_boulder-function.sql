@@ -11,11 +11,13 @@ AS $function$
         SELECT (ST_PixelAsCentroids(
             ST_CLIP(
                 cub.rast,
-                cbrfc_zone.buffered_envelope
+                cbrfc_zone.buffered_envelope,
+                true
             )
         )).*
         FROM cu_boulder cub, cbrfc_zone
-        WHERE cub.swe_date = TO_DATE(target_date, 'YYYY-MM-DD')
+        WHERE cub.swe_date = TO_DATE(target_date, 'YYYY-MM-DD') AND
+              ST_Intersects(cub.rast, cbrfc_zone.buffered_envelope)
     )
     SELECT cu_pixels.val, cu_pixels.geom
     FROM cu_pixels, cbrfc_zone
