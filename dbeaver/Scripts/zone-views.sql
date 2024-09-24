@@ -29,3 +29,9 @@ CREATE OR REPLACE VIEW public.CUB_ALEC2HLF AS (
     SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
     FROM cu_swe_for_zone_and_date('ALEC2HLF', '2023-04-01') AS cu_swe
 );
+
+-- SNODAS SWE views
+CREATE OR REPLACE VIEW public.SNODAS_ALEC2HLF AS (
+    SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
+    FROM snodas_swe_for_zone_and_date ('ALEC2HLF', '2023-04-01') AS cu_swe
+);
