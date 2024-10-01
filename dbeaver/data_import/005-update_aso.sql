@@ -9,4 +9,4 @@ UPDATE aso SET swe_date =  to_date(split_part(filename, '_', 1), 'YYYYMMDD');
 CREATE INDEX ON aso(swe_date);
 CREATE INDEX aso_ch5id_fk_idx ON aso(ch5_id);
 
-VACCUM FULL aso;
+VACUUM FULL aso;
