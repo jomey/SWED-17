@@ -21,6 +21,9 @@ fi
 
 # Import the entire raster into the database
 # Note the -x option that does not add a max extent contraint to the table
-raster2pgsql -I -C -M -x -F -F -t 32x32 \
+raster2pgsql -I -C -M -x -F -Y -t 32x32 \
     $(realpath ${1}) aso | \
     psql -U oper -h mujeres -d swe_data
+
+# Add date column with index based on filenames
+psql -U oper -h mujeres -d swe_data -f 005-update_aso.sql
