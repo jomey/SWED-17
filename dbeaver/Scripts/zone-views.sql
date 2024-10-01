@@ -47,3 +47,9 @@ CREATE OR REPLACE VIEW public.UA_1KM_ALEC2HUF AS (
     SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
     FROM swe_from_product_for_zone_and_date ('ua_1km', 'ALEC2HUF', '2023-04-01') AS cu_swe
 );
+
+-- iSnobal SWE view
+CREATE OR REPLACE VIEW public.isnobal_ALEC2HUF AS (
+    SELECT ROW_NUMBER() OVER () AS ID, swe, raster_center
+    FROM swe_from_product_for_zone_and_date ('isnobal', 'ALEC2HUF', '2023-04-01')
+);
