@@ -24,7 +24,7 @@ fi
 
 DB_FILE="${1}_db.tif"
 
-gdalwarp -overwrite \
+gdalwarp -overwrite -multi \
     -t_srs EPSG:4269 \
     -co TILED=YES \
     -co COMPRESS=ZSTD \
