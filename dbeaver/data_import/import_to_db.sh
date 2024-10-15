@@ -68,7 +68,7 @@ while true; do
 done
 
 # Import metadata to database
-raster2pgsql ${IMPORT_MODE} -M -F ${OUT_DB_RASTER} -Y -s 4269 -F -t 32x32 \
+raster2pgsql ${IMPORT_MODE} -M -F ${OUT_DB_RASTER} -Y -s 4269 -t 32x32 \
     $(realpath ${FILE}) ${TABLE} | \
     psql ${DB_CONNECT_OPTIONS}
 
