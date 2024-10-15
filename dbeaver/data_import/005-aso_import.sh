@@ -1,29 +1,33 @@
 #/usr/bin/env bash
 # 
-# Import ASO SWE tifs and make sure they are in EPSG:4269
+# Import ASO SWE tifs
 #
-# Script assumes:
-# * Import a file to the database if given one argument
-#   Example: 005-aso_import.sh path/to/aso.vrt
-# * Convert a raw ASO file and import to the database if given a second argument
-#   Example: 005-aso_import.sh path/to/aso.vrt path/to/aso.tif
+# Arguments:
+#   -s: Path to file to import
+#   -c Create table and import records
+#   -a Append records to table (Default)
+#   -d: Name of DB source file to use as temporary staging file
+#       Required pattern: YYYYMMDD_file_name
+# Example call
+#   aso_import.sh -s data/ASO_SWE.tif -d data/20240101_SWE
+#
+# NOTE:
+#   The DB source file is only temporary as the whole raster is imported
 set -e
 
-if [ ! -z ${2} ]; then
+source import_script_options.sh
 
-  # Remove old file if present
-  if [ -f ${1} ]; then
-    rm ${1}
-  fi
+TABLE='aso'
 
-  gdalwarp -t_srs EPSG:4269 ${2} ${1}
+# NOTE: This will update the $DB_FILE variable
+source ./convert_to_db_tif.sh ${DB_FILE} ${SOURCE_FILE}
+
+if [[ "$IMPORT_MODE" == "$APPEND_RECORDS" ]]; then
+    POST_STEP="-p 005-update_aso_records.sql"
+elif [[ "$IMPORT_MODE" == "$CREATE_TABLE" ]]; then
+    POST_STEP="-p 005-update_aso_table.sql"
 fi
 
-# Import the entire raster into the database
-# Note the -x option that does not add a max extent contraint to the table
-raster2pgsql -I -C -M -x -F -Y -t 32x32 \
-    $(realpath ${1}) aso | \
-    psql -U oper -h mujeres -d swe_data
-
-# Add date column with index based on filenames
-psql -U oper -h mujeres -d swe_data -f 005-update_aso.sql
+./import_to_db.sh \
+  -f ${DB_FILE} -t ${TABLE} \
+  ${IMPORT_MODE} ${POST_STEP}
