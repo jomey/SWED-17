@@ -16,6 +16,9 @@ DB_CONNECT_OPTIONS='-h mujeres -U oper -d swe_data'
 # Treat files as out-db or import the actual data
 OUT_DB_RASTER=""
 
+# Default SRS for import rasters
+SRS=4269
+
 # Default import mode is to append
 # Values are raster2pgsql Options
 APPEND_RECORDS="-a"
@@ -68,7 +71,7 @@ while true; do
 done
 
 # Import metadata to database
-raster2pgsql ${IMPORT_MODE} -M -F ${OUT_DB_RASTER} -Y -s 4269 -t 32x32 \
+raster2pgsql ${IMPORT_MODE} -M -F ${OUT_DB_RASTER} -Y -s ${SRS} -t 32x32 \
     $(realpath ${FILE}) ${TABLE} | \
     psql ${DB_CONNECT_OPTIONS}
 
