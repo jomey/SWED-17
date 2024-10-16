@@ -38,7 +38,11 @@ ALTER TABLE cbrfc_zones RENAME COLUMN descriptoi TO description;
 CREATE TABLE cbrfc_ch5id AS
 SELECT ROW_NUMBER() OVER (ORDER BY ch5_id) AS ID, * FROM 
    (SELECT DISTINCT ch5_id FROM cbrfc_zones cz);
-ALTER TABLE cbrfc_ch5id ADD CONSTRAINT cbrfc_ch5id_pkey PRIMARY key(id);
+
+-- Add constraint and a description column to copy from the original
+ALTER TABLE cbrfc_ch5id
+    ADD description TEXT,
+    ADD CONSTRAINT cbrfc_ch5id_pkey PRIMARY key(id);
 CREATE UNIQUE INDEX cbrfc_ch5_id_idx ON cbrfc_ch5id(ch5_id);
 
 -- Rename old column and add foreigh key constraint
@@ -56,9 +60,18 @@ FROM (
 ) AS subquery
 WHERE ch5_id_name=subquery.CH5_name;
 
--- Drop column that is now defined via foreign key and index to the latter
+-- Populate descriptions
+UPDATE cbrfc_ch5id 
+    SET description=cbrfc_zones.description
+    FROM cbrfc_zones 
+    WHERE cbrfc_zones.ch5_id = cbrfc_ch5id.id;
+
+-- Drop column that is now defined via foreign key, the descrption column,
+-- and index to the latter
 DROP INDEX ch5_id_idx IF EXISTS;
-ALTER TABLE cbrfc_zones DROP COLUMN ch5_id_name;
+ALTER TABLE cbrfc_zones 
+    DROP COLUMN ch5_id_name
+    DROP COLUMN description;
 CREATE INDEX cbrfc_zones_ch5_id_fk_idx ON cbrfc_zones(ch5_id);
 
 -- Add not-null contraint to prevent orphans
